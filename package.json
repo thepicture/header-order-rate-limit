@@ -1,7 +1,7 @@
 {
   "name": "header-order-rate-limit",
   "version": "0.0.0",
-  "description": "Blocks http requests by checking rate of the header order",
+  "description": "Rate limits http requests based on header order",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
