@@ -1,0 +1,21 @@
+{
+  "name": "header-order-rate-limit",
+  "version": "0.0.0",
+  "description": "Blocks http requests by checking rate of the header order",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "http",
+    "headers",
+    "rate",
+    "limit",
+    "fingerprint",
+    "detection",
+    "bot",
+    "security"
+  ],
+  "author": "thepicture",
+  "license": "ISC"
+}
