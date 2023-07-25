@@ -67,3 +67,7 @@ Checks if a request has hit the rate limit based on the provided headers.
 
 `dateNow`: (optional) A timestamp (`EpochTimeStamp`) representing the current time. If not provided, the current system time will be used.
 Returns `true` if the request has hit the rate limit, otherwise `false`.
+
+## Test
+
+`npm run test`
