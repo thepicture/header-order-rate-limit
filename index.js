@@ -1,8 +1,11 @@
+const SECONDS_IN_MILLISECONDS = 1000;
+
 module.exports = class HeaderOrderRateLimiter {
   rates = {};
   optionsMemento = {
     blockWhenAttemptsReach: 3,
     perLastMilliseconds: 3000,
+    useBackOffFactor: true,
   };
 
   get options() {
@@ -18,11 +21,12 @@ module.exports = class HeaderOrderRateLimiter {
    * @param {{
    * blockWhenAttemptsReach: number;
    * perLastMilliseconds: number;
+   * useBackOffFactor: boolean;
    * }} options
    */
   constructor(options) {
     if (options) {
-      this.options = { ...this.options, options };
+      this.options = { ...this.options, ...options };
     }
   }
 
@@ -52,15 +56,22 @@ module.exports = class HeaderOrderRateLimiter {
    * @returns {boolean} `true` if request hit rate limit, else `false`
    */
   check(headers, { dateNow } = {}) {
-    const { blockWhenAttemptsReach, perLastMilliseconds } = this.options;
+    const { blockWhenAttemptsReach, perLastMilliseconds, useBackOffFactor } =
+      this.options;
     const rate = this.rates[JSON.stringify(Object.keys(headers))];
     const now = dateNow || Date.now();
 
     if (rate) {
       return (
         rate.filter((date) => {
-          console.log(now - date, perLastMilliseconds);
-          return now - date <= perLastMilliseconds;
+          return (
+            now - date <=
+            perLastMilliseconds +
+              (useBackOffFactor
+                ? (rate.length - blockWhenAttemptsReach) *
+                  SECONDS_IN_MILLISECONDS
+                : 0)
+          );
         }).length >= blockWhenAttemptsReach
       );
     }
