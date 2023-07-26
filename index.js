@@ -59,7 +59,6 @@ module.exports = class HeaderOrderRateLimiter {
     if (rate) {
       return (
         rate.filter((date) => {
-          console.log(now - date, perLastMilliseconds);
           return now - date <= perLastMilliseconds;
         }).length >= blockWhenAttemptsReach
       );

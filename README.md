@@ -70,4 +70,4 @@ Returns `true` if the request has hit the rate limit, otherwise `false`.
 
 ## Test
 
-`npm run test`
+`npm test`
