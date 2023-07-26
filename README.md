@@ -50,6 +50,8 @@ Creates a new `HeaderOrderRateLimiter` instance with the specified options.
 
 `perLastMilliseconds`: Time window in milliseconds to track attempts. Default: `3000`.
 
+`useBackOffFactor`: Expands the track window as new requests come so it becomes harder to make periodic fetches to avoid detection. Default: `true`.
+
 ### `track(headers, { dateNow })`
 
 Tracks the timestamp of a request based on the provided headers.
@@ -70,4 +72,4 @@ Returns `true` if the request has hit the rate limit, otherwise `false`.
 
 ## Test
 
-`npm run test`
+`npm test`
