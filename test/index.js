@@ -193,8 +193,7 @@ describe("HeaderOrderRateLimiter", () => {
     assert.strictEqual(expected, actual);
   });
 
-  it("should use backoff factor", () => {
-    const expected = true;
+  it("should use back-off factor by default", () => {
     const order = {
       "user-agent": "node",
       "accept-language": "en",
@@ -203,17 +202,56 @@ describe("HeaderOrderRateLimiter", () => {
 
     limiter.track(order, { dateNow: now });
     limiter.track(order, { dateNow: new Date(now).setSeconds(1) });
-    limiter.track(order, { dateNow: new Date(now).setSeconds(2) });
+    assert.strictEqual(
+      false,
+      limiter.check(order, { dateNow: new Date(now).setSeconds(1) })
+    );
 
     limiter.track(order, { dateNow: new Date(now).setSeconds(4) });
     limiter.track(order, { dateNow: new Date(now).setSeconds(5) });
+    assert.strictEqual(
+      true,
+      limiter.check(order, { dateNow: new Date(now).setSeconds(5) })
+    );
 
-    limiter.track(order, { dateNow: new Date(now).setSeconds(7) });
     limiter.track(order, { dateNow: new Date(now).setSeconds(8) });
-    const actual = limiter.check(order, {
-      dateNow: new Date(now).setSeconds(8),
+    limiter.track(order, { dateNow: new Date(now).setSeconds(9) });
+    assert.strictEqual(
+      true,
+      limiter.check(order, { dateNow: new Date(now).setSeconds(9) })
+    );
+  });
+
+  it("should disable back-off factor when specified explicitly", () => {
+    limiter = new HeaderOrderRateLimiter({
+      useBackOffFactor: false,
     });
 
-    assert.strictEqual(expected, actual);
+    const order = {
+      "user-agent": "node",
+      "accept-language": "en",
+    };
+    const now = Date.parse("2023-01-01T00:00:00");
+
+    limiter.track(order, { dateNow: now });
+    limiter.track(order, { dateNow: new Date(now).setSeconds(1) });
+    assert.strictEqual(
+      false,
+      limiter.check(order, { dateNow: new Date(now).setSeconds(1) })
+    );
+
+    limiter.track(order, { dateNow: new Date(now).setSeconds(4) });
+    limiter.track(order, { dateNow: new Date(now).setSeconds(5) });
+    assert.strictEqual(
+      false,
+      limiter.check(order, { dateNow: new Date(now).setSeconds(5) })
+    );
+
+    limiter.track(order, { dateNow: new Date(now).setSeconds(8) });
+    limiter.track(order, { dateNow: new Date(now).setSeconds(9) });
+    assert.strictEqual(
+      false,
+      limiter.check(order, { dateNow: new Date(now).setSeconds(9) })
+    );
   });
 });
