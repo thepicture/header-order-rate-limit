@@ -1,6 +1,6 @@
 {
   "name": "header-order-rate-limit",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Rate limits http requests based on header order",
   "main": "index.js",
   "scripts": {
