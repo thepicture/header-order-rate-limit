@@ -254,4 +254,26 @@ describe("HeaderOrderRateLimiter", () => {
       limiter.check(order, { dateNow: new Date(now).setSeconds(9) })
     );
   });
+
+  it("should parametrize back-off factor", () => {
+    const expected = true;
+    limiter = new HeaderOrderRateLimiter({
+      calculateBackOffDeltaMilliseconds: () => 2000,
+    });
+
+    const order = {
+      "user-agent": "node",
+      "accept-language": "en",
+    };
+    const now = Date.parse("2023-01-01T00:00:00");
+
+    limiter.track(order, { dateNow: now });
+    limiter.track(order, { dateNow: new Date(now).setSeconds(1) });
+    limiter.track(order, { dateNow: new Date(now).setSeconds(5) });
+    const actual = limiter.check(order, {
+      dateNow: new Date(now).setSeconds(5),
+    });
+
+    assert.strictEqual(expected, actual);
+  });
 });

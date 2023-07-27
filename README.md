@@ -52,6 +52,16 @@ Creates a new `HeaderOrderRateLimiter` instance with the specified options.
 
 `useBackOffFactor`: Expands the track window as new requests come so it becomes harder to make periodic fetches to avoid detection. Default: `true`.
 
+`calculateBackOffDeltaMilliseconds: (blockWhenAttemptsReach: number, rate: number[]) => void`: Overrides back-off function. Default:
+
+```
+one millisecond * (count of order requests - 3)
+```
+
+First argument is max amount of requests before block.
+
+Second argument is consecutive history of request unix times in milliseconds from old to new.
+
 ### `track(headers, { dateNow })`
 
 Tracks the timestamp of a request based on the provided headers.
