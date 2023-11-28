@@ -1,8 +1,9 @@
 {
   "name": "header-order-rate-limit",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "Rate limits http requests based on header order",
   "main": "index.js",
+  "repository": "thepicture/header-order-rate-limit",
   "scripts": {
     "test": "node test"
   },
